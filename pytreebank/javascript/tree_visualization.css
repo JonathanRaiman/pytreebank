@@ -1,0 +1,161 @@
+div.FullSentree
+{
+	display: inline-block;
+	margin: 10px 0 0 10px;
+	vertical-align: top;
+	border-radius: 16px;
+	box-shadow: 0 0 50px #000;
+	cursor: pointer;
+}
+div.FullSentree div.header
+{
+	height: 14px;
+	background: #999;
+	border: 1px solid #999;
+	border-top-right-radius: 15px;
+	border-top-left-radius: 15px;
+	color: #eee;
+	padding: 5px 15px;
+	text-align: center;
+	vertical-align: bottom;
+	font-family: Verdana;
+	font-weight: bold;
+	font-size: 12px;
+}
+div.FullSentree div.body
+{
+	background: #fff;
+	border: 1px solid #999;
+	border-bottom-right-radius: 15px;
+	border-bottom-left-radius: 15px;
+}
+/******************** Active Learning ********************/
+div.content p.description
+{
+	color: #333;
+	font-size: 11pt;
+	word-spacing: 1px;
+	line-height: 1.2em;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+div.content p.querybox
+{
+	color: #333;
+	font-size: 13pt;
+	word-spacing: 1px;
+	line-height: 1.2em;
+ 	padding-left: 10px;
+	padding-right: 10px;
+}
+div.content h3 {
+	display: inline-block;
+	padding: 0 10px 0 10px;
+	color: #333;
+	font-family: Georgia, Times New Roman, Serif;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+div.content p.inlinetitle {
+	display: inline;
+	padding: 0 20px 0 20px;
+	color: #333;
+	font-family: Georgia, Times New Roman, Serif;
+	font-size: 1.1em;
+	font-weight: bold;
+}
+div.content p.inlinebody
+{
+	display: inline-block;
+	color: #333;
+	font-size: 11pt;
+	word-spacing: 1px;
+	line-height: 1.2em;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+div.trees {
+	padding: 10px 10px 10px 10px; }
+div.tree {
+	display: inline-block;
+	border: 1px solid #aaa;
+	background: #fff;
+	padding: 10px;
+	margin: 0px; }
+div.tooltip {
+	position: absolute;
+	text-align: left;
+	width: 186px; /*( ((this.value.length + 1) * 12) + 12 ) + 'px'; /* make sure you update multiplier according to font size */
+	height: auto;
+	padding: 15px;
+	font: 12px sans-serif;
+	background: seashell;
+	border-radius: 8px;
+	pointer-events: none;
+	-webkit-box-shadow: rgba(0,0,0,0.45) 0 5px 20px;
+	   -moz-box-shadow: rgba(0,0,0,0.45) 0 5px 20px;
+			box-shadow: rgba(0,0,0,0.45) 0 5px 20px;
+/* 	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 10px rgba(0, 0, 0, 0.5);
+	   -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 10px rgba(0, 0, 0, 0.5);
+	        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 10px rgba(0, 0, 0, 0.5); */
+/* 	-webkit-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+	   -moz-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
+			box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125); */
+	}
+div.scoring {
+	text-align: left;
+	height: auto;
+	font-family: Verdana;
+	font-size: 11pt;
+	background-color: transparent;
+	background-image: none;
+	margin-left:  0px;
+	margin-right: 0px;
+	margin-top:   0px;
+	color: #333; }
+.spacingFree { padding: 0px; margin: 0px; }
+.scoreOne   { color: #B2182B; }
+.scoreTwo   { color: #F4A582; }
+.scoreThree { color: #999999; }
+.scoreFour  { color: #92C5DE; }
+.scoreFive  { color: #2166AC; }
+.link {
+	fill: none;
+	stroke: #ccc;
+	stroke-width: 1.5px; }
+
+.btn {
+	background-image: none;
+	  display: inline-block;
+	  *display: inline;
+	  padding: 4px 12px;
+	  margin-bottom: 0;
+	  margin-right: .3em;
+	  *margin-left: .3em;
+	  font-size: 14px;
+	  line-height: 20px;
+	  color: #333333;
+	  text-align: center;
+	  vertical-align: middle;
+	  cursor: pointer;
+	  border: 1px solid #cccccc;
+	  *border: 0;
+	  border-color: #eee #eee #ccc;
+	  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	  border-bottom-color: #999; }
+.btn:hover {
+	text-decoration:none; }
+.btn:active {
+	text-decoration:none; }
+.btn.btn-next {
+	background-color: #3498db; }
+.btn.btn-next:hover,
+.btn.btn-next:focus,
+.btn-group:focus .btn.btn-next.dropdown-toggle {
+	background-color: #5dade2; }
+.btn.btn-next:active,
+.btn-group.open .btn.btn-next.dropdown-toggle,
+.btn.btn-next.active {
+	background-color: #2c81ba; }
+.btn.btn-thanks {
+	background-color: #cccccc; }
