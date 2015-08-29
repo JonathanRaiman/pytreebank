@@ -11,7 +11,7 @@ try:
     font = ImageFont.core.getfont("/Library/Fonts/Georgia.ttf", 15)
     def text_size(text):
         return max(4, font.getsize(text)[0][0])
-except ImportError:
+except Exception:
     def text_size(text):
         return max(4, int(len(s) * 1.1))
 # make changes here to incorporate cap and uncap unknown words.
