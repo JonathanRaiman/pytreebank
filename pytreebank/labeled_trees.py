@@ -91,6 +91,7 @@ class LabeledTree(object):
         """
         self.children.append(child)
         child.parent = self
+        self.udepth = max([child.udepth for child in self.children]) + 1
 
     def add_general_child(self, child):
         self.general_children.append(child)

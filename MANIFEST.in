@@ -1,1 +1,3 @@
 include README.md
+include pytreebank/javascript/*.js
+include pytreebank/javascript/*.css
