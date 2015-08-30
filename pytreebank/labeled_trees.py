@@ -16,7 +16,7 @@ try:
         return max(4, font.getsize(text)[0][0])
 except Exception:
     def text_size(text):
-        return max(4, int(len(s) * 1.1))
+        return max(4, int(len(text) * 1.1))
 # make changes here to incorporate cap and uncap unknown words.
 
 def dot_product(a, b):
