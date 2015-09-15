@@ -47,7 +47,15 @@ def create_tree_from_string(line):
 
                 # assign current word:
                 if len(current_word) > 0:
-                    current_node.sentence = current_word.replace("\xa0", " ")
+                    current_node.sentence = current_word\
+                        .replace("\xa0", " ")\
+                        .replace("\\", "")\
+                        .replace("-LRB-", "(")\
+                        .replace("-RRB-", ")")\
+                        .replace("-LCB-", "{")\
+                        .replace("-RCB-", "}")\
+                        .replace("-LSB-", "[")\
+                        .replace("-RSB-", "]")
                     current_node.udepth   = 1
 
                     # erase current word
@@ -94,3 +102,4 @@ def import_tree_corpus(trees):
         for line in f:
             tree_list.append(create_tree_from_string(line))
     return tree_list
+

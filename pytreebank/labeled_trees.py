@@ -195,7 +195,15 @@ class LabeledTree(object):
                 rep += str(child)
             return rep + ")"
         else:
-            return ("(%d %s) " % (self.label, self.sentence))
+            text = self.sentence\
+                .replace("(", "-LRB-")\
+                .replace(")", "-RRB-")\
+                .replace("{", "-LCB-")\
+                .replace("}", "-RCB-")\
+                .replace("[", "-LSB-")\
+                .replace("]", "-RSB-")
+
+            return ("(%d %s) " % (self.label, text))
 
     @staticmethod
     def inject_visualization_javascript():
