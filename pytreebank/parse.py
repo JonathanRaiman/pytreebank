@@ -1,4 +1,5 @@
 import re
+import codecs
 from .labeled_trees       import LabeledTree
 from .labeled_tree_corpus import LabeledTreeCorpus
 
@@ -90,7 +91,7 @@ def check_udepth(tree):
 
 def import_tree_corpus_words(trees):
     tree_list = LabeledTreeCorpus()
-    with open(trees, "rt") as f:
+    with codecs.open(trees, "r", "UTF-8") as f:
         for line in f:
             for tree in create_leaves_from_string(line):
                 tree_list.append(tree)
@@ -98,7 +99,7 @@ def import_tree_corpus_words(trees):
 
 def import_tree_corpus(trees):
     tree_list = LabeledTreeCorpus()
-    with open(trees, "rt") as f:
+    with codecs.open(trees, "r", "UTF-8") as f:
         for line in f:
             tree_list.append(create_tree_from_string(line))
     return tree_list

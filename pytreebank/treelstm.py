@@ -3,6 +3,7 @@ Special loading methods for importing dataset as processed
 by the TreeLSTM code from https://github.com/stanfordnlp/treelstm
 """
 from .labeled_trees       import LabeledTree
+import codes
 
 def import_tree_corpus(labels_path, parents_path, sentences_path):
     """
@@ -20,11 +21,11 @@ def import_tree_corpus(labels_path, parents_path, sentences_path):
 
     trees : a list of LabeledTree
     """
-    with open(labels_path) as f:
+    with codecs.open(labels_path, "r", "UTF-8") as f:
         label_lines = f.readlines()
-    with open(parents_path) as f:
+    with codecs.open(parents_path, "r", "UTF-8") as f:
         parent_lines = f.readlines()
-    with open(sentences_path) as f:
+    with codecs.open(sentences_path, "r", "UTF-8") as f:
         word_lines = f.readlines()
     assert len(label_lines) == len(parent_lines)
     assert len(label_lines) == len(word_lines)
