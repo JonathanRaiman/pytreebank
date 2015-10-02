@@ -3,7 +3,7 @@ Special loading methods for importing dataset as processed
 by the TreeLSTM code from https://github.com/stanfordnlp/treelstm
 """
 from .labeled_trees       import LabeledTree
-import codes
+import codecs
 
 def import_tree_corpus(labels_path, parents_path, sentences_path):
     """
