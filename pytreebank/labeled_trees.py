@@ -116,10 +116,11 @@ class LabeledTree(object):
         else:
             self.sentence = self.sentence.lower()
 
-    def to_dict(self, index = 1):
+    def to_dict(self, index = 0):
         """
         Dict format for use in Javascript / Jason Chuang's display technology.
         """
+        index += 1
         rep = {}
         rep["index"] = index
         rep["leaf"] = len(self.children) == 0
@@ -142,8 +143,7 @@ class LabeledTree(object):
             if i > 0:
                 text += " "
             child_key = "child%d" % (i)
-            index += 1
-            rep[child_key] = child.to_dict(index = index)
+            (rep[child_key], index) = child.to_dict(index)
             text += rep[child_key]["text"]
             seen_tokens += rep[child_key]["tokens"]
             witnessed_pixels += rep[child_key]["pixels"]
@@ -151,10 +151,11 @@ class LabeledTree(object):
         rep["text"] = text
         rep["tokens"] = 1 if (self.sentence != None and len(self.sentence) > 0) else seen_tokens
         rep["pixels"] = witnessed_pixels + 3 if len(self.children) > 0 else text_size(self.sentence)
-        return rep
+        return (rep, index)
 
     def to_json(self):
-        return json.dumps(self.to_dict())
+        rep, _ = self.to_dict()
+        return json.dumps(rep)
 
     def display(self):
         display(Javascript("createTrees(["+self.to_json()+"])"))
