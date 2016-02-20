@@ -36,7 +36,14 @@ class LabeledSentence(object):
 
 class LabeledTree(object):
 
-    def __init__(self, depth = 0, sentence = None, label = None, children = None, parent = None, udepth = 1, calculated_embedding = None):
+    def __init__(self,
+                 depth=0,
+                 sentence=None,
+                 label=None,
+                 children=None,
+                 parent=None,
+                 udepth=1,
+                 calculated_embedding=None):
         self.label    = label
         self.predicted_label = None
         self.children = children if children != None else []

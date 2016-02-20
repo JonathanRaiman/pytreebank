@@ -14,66 +14,68 @@ def create_leaves_from_string(line):
     for match in matches:
         yield create_tree_from_string(match)
 
+def attribute_sentence_label(node, current_word):
+    node.sentence = current_word\
+        .replace("\xa0", " ")\
+        .replace("\\", "")\
+        .replace("-LRB-", "(")\
+        .replace("-RRB-", ")")\
+        .replace("-LCB-", "{")\
+        .replace("-RCB-", "}")\
+        .replace("-LSB-", "[")\
+        .replace("-RSB-", "]")
+    node.sentence = node.sentence .strip(" ")
+    node.udepth = 1
+    if len(node.sentence) > 0 and node.sentence[0].isdigit():
+        split_sent = node.sentence.split(" ", 1)
+        label = split_sent[0]
+        if len(split_sent) > 1:
+            sentence = split_sent[1]
+            node.sentence = sentence
+        node.label = int(label)
+
+    if len(node.sentence) == 0:
+        node.sentence = None
+
 def create_tree_from_string(line):
     depth         = 0
-    awaiting_num  = False
     current_word  = ""
     root          = None
     current_node  = root
 
     for char in line:
 
-        if awaiting_num:
-
-            current_node.label = int(char)
-            awaiting_num = False
-
-        else:
-            if char == '(':
-                depth += 1
-                if depth > 1:
-                    # replace current head node by this node:
-                    child = LabeledTree(depth = depth)
-                    current_node.add_child(child)
-                    current_node = child
-                    root.add_general_child(child)
-                else:
-                    root = LabeledTree(depth = depth)
-                    root.add_general_child(root)
-                    current_node = root
-
-                awaiting_num = True
-
-            elif char == ')':
-
-                # assign current word:
-                if len(current_word) > 0:
-                    current_node.sentence = current_word\
-                        .replace("\xa0", " ")\
-                        .replace("\\", "")\
-                        .replace("-LRB-", "(")\
-                        .replace("-RRB-", ")")\
-                        .replace("-LCB-", "{")\
-                        .replace("-RCB-", "}")\
-                        .replace("-LSB-", "[")\
-                        .replace("-RSB-", "]")
-                    current_node.udepth   = 1
-
-                    # erase current word
-                    current_word = ""
-
-                # go up a level:
-                depth -= 1
-                if current_node.parent != None:
-                    current_node.parent.udepth = max(current_node.udepth+1, current_node.parent.udepth)
-                current_node = current_node.parent
-
-            elif char == " ":
-                # ignore spacing
-                continue
+        if char == '(':
+            if current_node is not None and len(current_word) > 0:
+                attribute_sentence_label(current_node, current_word)
+                current_word = ""
+            depth += 1
+            if depth > 1:
+                # replace current head node by this node:
+                child = LabeledTree(depth=depth)
+                current_node.add_child(child)
+                current_node = child
+                root.add_general_child(child)
             else:
-                # add to current read word
-                current_word += char
+                root = LabeledTree(depth=depth)
+                root.add_general_child(root)
+                current_node = root
+
+        elif char == ')':
+
+            # assign current word:
+            if len(current_word) > 0:
+                attribute_sentence_label(current_node, current_word)
+                current_word = ""
+
+            # go up a level:
+            depth -= 1
+            if current_node.parent != None:
+                current_node.parent.udepth = max(current_node.udepth+1, current_node.parent.udepth)
+            current_node = current_node.parent
+        else:
+            # add to current read word
+            current_word += char
     if depth != 0:
         raise ParseError("Not an equal amount of closing and opening parentheses")
 
