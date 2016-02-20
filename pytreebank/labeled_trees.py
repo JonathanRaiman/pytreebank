@@ -35,6 +35,7 @@ class LabeledSentence(object):
         self.label    = None
 
 class LabeledTree(object):
+    SCORE_MAPPING = [-12.5,-6.25,0.0,6.25,12.5]
 
     def __init__(self,
                  depth=0,
@@ -132,16 +133,16 @@ class LabeledTree(object):
         rep["index"] = index
         rep["leaf"] = len(self.children) == 0
         rep["depth"] = self.udepth
-        rep["scoreDistr"] = [0.0, 0.0, 0.0, 0.0, 0.0]
+        rep["scoreDistr"] = [0.0] * len(LabeledTree.SCORE_MAPPING)
         # dirac distribution at correct label
-        rep["scoreDistr"][self.label] = 1.0
-        rep["scoreDistr"]
-        mappping = [-12.5,-6.25,0.0,6.25,12.5]
-        rep["rating"] = mappping[self.label] + 12.5
+        if self.label is not None:
+            rep["scoreDistr"][self.label] = 1.0
+            mapping = LabeledTree.SCORE_MAPPING[:]
+            rep["rating"] = mapping[self.label] + min(mapping)
         # if you are using this method for printing predictions
         # from a model, the the dot product with the model's output
         # distribution should be taken with this list:
-        # dot_product(predicted_label, mappping) + 12.5
+        # dot_product(predicted_label, mapping) + min(mapping)
         rep["numChildren"] = len(self.children)
         text = self.sentence if self.sentence != None else ""
         seen_tokens = 0
@@ -214,9 +215,9 @@ class LabeledTree(object):
             return ("(%d %s) " % (self.label, text))
 
     @staticmethod
-    def inject_visualization_javascript():
+    def inject_visualization_javascript(treeWidth=1200, treeHeight=400, treeNodeRadius=10):
         """
         In an Ipython notebook, show SST trees using the same Javascript
         code as used by Jason Chuang's visualisations.
         """
-        insert_sentiment_markup()
+        insert_sentiment_markup(treeWidth=treeWidth, treeHeight=treeHeight, treeNodeRadius=treeNodeRadius)

@@ -32,7 +32,12 @@ def attribute_sentence_label(node, current_word):
         if len(split_sent) > 1:
             sentence = split_sent[1]
             node.sentence = sentence
-        node.label = int(label)
+
+        if all(c.isdigit() for c in label):
+            node.label = int(label)
+        else:
+            sentence = label + " " + sentence
+            node.sentence = sentence
 
     if len(node.sentence) == 0:
         node.sentence = None
