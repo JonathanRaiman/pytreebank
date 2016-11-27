@@ -1,7 +1,7 @@
 SST Utils
 ---------
 
-Utilities for loading and visualizing Stanford Sentiment Treebank.
+Utilities for downloading, importing, and visualizing the [Stanford Sentiment Treebank](http://nlp.stanford.edu/sentiment/treebank.html).
 See examples below for usage.
 
 @author Jonathan Raiman
@@ -16,11 +16,11 @@ Allows for visualization using Jason Chuang's Javascript and CSS within an IPyth
 import pytreebank
 # load the sentiment treebank corpus in the parenthesis format,
 # e.g. "(4 (2 very ) (3 good))"
-dataset = pytreebank.import_tree_corpus("train.txt")
+dataset = pytreebank.load_sst()
 # add Javascript and CSS to the Ipython notebook
 pytreebank.LabeledTree.inject_visualization_javascript()
 # select and example to visualize
-example = dataset[0]
+example = dataset["train"][0]
 # display it in the page
 example.display()
 ```
@@ -33,8 +33,8 @@ To use the corpus to output spans from the different trees you can call the `to_
 
 ```python
 import pytreebank
-dataset = pytreebank.import_tree_corpus("train.txt")
-example = dataset[0]
+dataset = pytreebank.load_sst()
+example = dataset["train"][0]
 
 # extract spans from the tree.
 for label, sentence in example.to_labeled_lines():
@@ -44,4 +44,17 @@ for label, sentence in example.to_labeled_lines():
 	))
 ```
 
+### Download/Loading control:
 
+Change the save/load directory by passing a path (this will look for
+`train.txt`, `dev.txt` and `test.txt` files under the directory).
+
+```
+dataset = pytreebank.load_sst("/path/to/sentiment/")
+```
+
+To just load a single dataset file:
+
+```
+train_data = pytreebank.import_tree_corpus("/path/to/sentiment/train.txt")
+```

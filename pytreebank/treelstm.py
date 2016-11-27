@@ -2,10 +2,10 @@
 Special loading methods for importing dataset as processed
 by the TreeLSTM code from https://github.com/stanfordnlp/treelstm
 """
-from .labeled_trees       import LabeledTree
+from .labeled_trees import LabeledTree
 import codecs
 
-def import_tree_corpus(labels_path, parents_path, sentences_path):
+def import_tree_corpus(labels_path, parents_path, texts_path):
     """
     Import dataset from the TreeLSTM data generation scrips.
 
@@ -14,7 +14,7 @@ def import_tree_corpus(labels_path, parents_path, sentences_path):
 
     labels_path: where are labels are stored (should be in data/sst/labels.txt)
     parents_path: where the parent relationships are stored (should be in data/sst/parents.txt)
-    sentences_path: where are strings for each tree are stored (should be in data/sst/sents.txt)
+    texts_path: where are strings for each tree are stored (should be in data/sst/sents.txt)
 
     Outputs
     -------
@@ -25,7 +25,7 @@ def import_tree_corpus(labels_path, parents_path, sentences_path):
         label_lines = f.readlines()
     with codecs.open(parents_path, "r", "UTF-8") as f:
         parent_lines = f.readlines()
-    with codecs.open(sentences_path, "r", "UTF-8") as f:
+    with codecs.open(texts_path, "r", "UTF-8") as f:
         word_lines = f.readlines()
     assert len(label_lines) == len(parent_lines)
     assert len(label_lines) == len(word_lines)
@@ -40,18 +40,18 @@ def import_tree_corpus(labels_path, parents_path, sentences_path):
         trees.append(read_tree(parents, labels, words))
     return trees
 
-def assign_sentences(node, words, next_idx=0):
+def assign_texts(node, words, next_idx=0):
     """
     Recursively assign the words to nodes by finding and
     assigning strings to the leaves of a tree in left
     to right order.
     """
     if len(node.children) == 0:
-        node.sentence = words[next_idx]
+        node.text = words[next_idx]
         return next_idx + 1
     else:
         for child in node.children:
-            next_idx = assign_sentences(child, words, next_idx)
+            next_idx = assign_texts(child, words, next_idx)
         return next_idx
 
 def read_tree(parents, labels, words):
@@ -84,5 +84,5 @@ def read_tree(parents, labels, words):
                 else:
                     prev = tree
                     idx = parent
-    assert assign_sentences(root, words) == len(words)
+    assert assign_texts(root, words) == len(words)
     return root

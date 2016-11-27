@@ -1,13 +1,7 @@
 """
 Make trees visualizable in an IPython notebook
 """
-import pyximport
-pyximport.install()
 import json
-
-from IPython.display import Javascript, display
-
-from .javascript import insert_sentiment_markup
 
 try:
     from PIL import ImageFont
@@ -16,41 +10,31 @@ try:
         return max(4, font.getsize(text)[0][0])
 except Exception:
     def text_size(text):
+        # TODO(contributors): make changes here to incorporate cap and uncap unknown words.
         return max(4, int(len(text) * 1.1))
-# make changes here to incorporate cap and uncap unknown words.
 
-def dot_product(a, b):
-    if type(a) != list:
-        a = list(a)
-    if type(b) != list:
-        b = list(b)
-    out = 0.0
-    for a_x, b_x in zip(a, b):
-        out += a_x * b_x
-    return out
 
 class LabeledSentence(object):
-    def __init__(self, sentence):
-        self.sentence = sentence
+    __slots__ = ["text", "label"]
+    def __init__(self, text):
+        self.text = text
         self.label    = None
+
 
 class LabeledTree(object):
     SCORE_MAPPING = [-12.5,-6.25,0.0,6.25,12.5]
 
     def __init__(self,
                  depth=0,
-                 sentence=None,
+                 text=None,
                  label=None,
                  children=None,
                  parent=None,
-                 udepth=1,
-                 calculated_embedding=None):
+                 udepth=1):
         self.label    = label
-        self.predicted_label = None
         self.children = children if children != None else []
         self.general_children = []
-        self.sentence = sentence
-        self.calculated_embedding = calculated_embedding
+        self.text = text
         self.parent   = parent
         self.depth    = depth
         self.udepth   = udepth
@@ -85,10 +69,9 @@ class LabeledTree(object):
         Deep Copy of a LabeledTree
         """
         return LabeledTree(
-            calculated_embedding = self.calculated_embedding,
             udepth = self.udepth,
             depth = self.depth,
-            sentence = self.sentence,
+            text = self.text,
             label = self.label,
             children = self.children.copy() if self.children != None else [],
             parent = self.parent)
@@ -122,9 +105,9 @@ class LabeledTree(object):
             for child in self.children:
                 child.lowercase()
         else:
-            self.sentence = self.sentence.lower()
+            self.text = self.text.lower()
 
-    def to_dict(self, index = 0):
+    def to_dict(self, index=0):
         """
         Dict format for use in Javascript / Jason Chuang's display technology.
         """
@@ -138,13 +121,12 @@ class LabeledTree(object):
         if self.label is not None:
             rep["scoreDistr"][self.label] = 1.0
             mapping = LabeledTree.SCORE_MAPPING[:]
-            rep["rating"] = mapping[self.label] + min(mapping)
+            rep["rating"] = mapping[self.label] - min(mapping)
         # if you are using this method for printing predictions
         # from a model, the the dot product with the model's output
         # distribution should be taken with this list:
-        # dot_product(predicted_label, mapping) + min(mapping)
         rep["numChildren"] = len(self.children)
-        text = self.sentence if self.sentence != None else ""
+        text = self.text if self.text != None else ""
         seen_tokens = 0
         witnessed_pixels = 0
         for i, child in enumerate(self.children):
@@ -157,8 +139,8 @@ class LabeledTree(object):
             witnessed_pixels += rep[child_key]["pixels"]
 
         rep["text"] = text
-        rep["tokens"] = 1 if (self.sentence != None and len(self.sentence) > 0) else seen_tokens
-        rep["pixels"] = witnessed_pixels + 3 if len(self.children) > 0 else text_size(self.sentence)
+        rep["tokens"] = 1 if (self.text != None and len(self.text) > 0) else seen_tokens
+        rep["pixels"] = witnessed_pixels + 3 if len(self.children) > 0 else text_size(self.text)
         return (rep, index)
 
     def to_json(self):
@@ -166,6 +148,8 @@ class LabeledTree(object):
         return json.dumps(rep)
 
     def display(self):
+        from IPython.display import Javascript, display
+
         display(Javascript("createTrees(["+self.to_json()+"])"))
         display(Javascript("updateTrees()"))
 
@@ -175,7 +159,7 @@ class LabeledTree(object):
             self_line = [left_lines[0] + " " + right_lines[0]]
             return self_line + left_lines + right_lines
         else:
-            return [self.sentence]
+            return [self.text]
 
     def to_labeled_lines(self):
         if len(self.children) > 0:
@@ -183,7 +167,7 @@ class LabeledTree(object):
             self_line = [(self.label, left_lines[0][1] + " " + right_lines[0][1])]
             return self_line + left_lines + right_lines
         else:
-            return [(self.label, self.sentence)]
+            return [(self.label, self.text)]
 
     def __str__(self):
         """
@@ -204,7 +188,7 @@ class LabeledTree(object):
                 rep += str(child)
             return rep + ")"
         else:
-            text = self.sentence\
+            text = self.text\
                 .replace("(", "-LRB-")\
                 .replace(")", "-RRB-")\
                 .replace("{", "-LCB-")\
@@ -215,9 +199,10 @@ class LabeledTree(object):
             return ("(%d %s) " % (self.label, text))
 
     @staticmethod
-    def inject_visualization_javascript(treeWidth=1200, treeHeight=400, treeNodeRadius=10):
+    def inject_visualization_javascript(tree_width=1200, tree_height=400, tree_node_radius=10):
         """
         In an Ipython notebook, show SST trees using the same Javascript
         code as used by Jason Chuang's visualisations.
         """
-        insert_sentiment_markup(treeWidth=treeWidth, treeHeight=treeHeight, treeNodeRadius=treeNodeRadius)
+        from .javascript import insert_sentiment_markup
+        insert_sentiment_markup(tree_width=tree_width, tree_height=tree_height, tree_node_radius=tree_node_radius)

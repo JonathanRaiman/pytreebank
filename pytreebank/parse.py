@@ -1,21 +1,17 @@
-import re
 import codecs
-from .labeled_trees       import LabeledTree
-from .labeled_tree_corpus import LabeledTreeCorpus
+import os
 
-find_bubbles = re.compile(r'(\([^\(\)]+\))')
+from collections import OrderedDict
 
-class ParseError(Exception):
-    def __init__(self, message):
-        self.message = message
+from .labeled_trees import LabeledTree
+from .download import download_sst
 
-def create_leaves_from_string(line):
-    matches = re.findall(find_bubbles, line)
-    for match in matches:
-        yield create_tree_from_string(match)
+class ParseError(ValueError):
+    pass
 
-def attribute_sentence_label(node, current_word):
-    node.sentence = current_word\
+
+def attribute_text_label(node, current_word):
+    node.text = current_word\
         .replace("\xa0", " ")\
         .replace("\\", "")\
         .replace("-LRB-", "(")\
@@ -24,23 +20,24 @@ def attribute_sentence_label(node, current_word):
         .replace("-RCB-", "}")\
         .replace("-LSB-", "[")\
         .replace("-RSB-", "]")
-    node.sentence = node.sentence .strip(" ")
+    node.text = node.text.strip(" ")
     node.udepth = 1
-    if len(node.sentence) > 0 and node.sentence[0].isdigit():
-        split_sent = node.sentence.split(" ", 1)
+    if len(node.text) > 0 and node.text[0].isdigit():
+        split_sent = node.text.split(" ", 1)
         label = split_sent[0]
         if len(split_sent) > 1:
-            sentence = split_sent[1]
-            node.sentence = sentence
+            text = split_sent[1]
+            node.text = text
 
         if all(c.isdigit() for c in label):
             node.label = int(label)
         else:
-            sentence = label + " " + sentence
-            node.sentence = sentence
+            text = label + " " + text
+            node.text = text
 
-    if len(node.sentence) == 0:
-        node.sentence = None
+    if len(node.text) == 0:
+        node.text = None
+
 
 def create_tree_from_string(line):
     depth         = 0
@@ -49,10 +46,9 @@ def create_tree_from_string(line):
     current_node  = root
 
     for char in line:
-
         if char == '(':
             if current_node is not None and len(current_word) > 0:
-                attribute_sentence_label(current_node, current_word)
+                attribute_text_label(current_node, current_word)
                 current_word = ""
             depth += 1
             if depth > 1:
@@ -67,10 +63,9 @@ def create_tree_from_string(line):
                 current_node = root
 
         elif char == ')':
-
             # assign current word:
             if len(current_word) > 0:
-                attribute_sentence_label(current_node, current_word)
+                attribute_text_label(current_node, current_word)
                 current_word = ""
 
             # go up a level:
@@ -86,23 +81,29 @@ def create_tree_from_string(line):
 
     return root
 
-def check_udepth(tree):
-    depths = depth_sorted_children(tree)
-    for i in reversed(range(1, depths[-1]+1)):
-        for tree in depths[i]:
-            if len(tree.children) == 0:
-                assert(tree.udepth == 1)
-            else:
-                assert(tree.udepth == max([i.udepth for i in tree.children]) + 1)
-    return tree
 
-def import_tree_corpus_words(trees):
-    tree_list = LabeledTreeCorpus()
-    with codecs.open(trees, "r", "UTF-8") as f:
-        for line in f:
-            for tree in create_leaves_from_string(line):
-                tree_list.append(tree)
-    return tree_list
+
+class LabeledTreeCorpus(list):
+    """
+    Read in the Stanford Sentiment Treebank using the original serialization format:
+
+    > (3 (2 this) (3 (2 is) (3 good ) )
+
+    """
+    def labels(self):
+        labelings = OrderedDict()
+        for tree in self:
+            for label, line in tree.to_labeled_lines():
+                labelings[line] = label
+        return labelings
+
+    def to_file(self, path, mode = "w"):
+        with open(path, mode = mode) as f:
+            for tree in self:
+                for label, line in tree.to_labeled_lines():
+                    f.write(line + "\n")
+
+
 
 def import_tree_corpus(trees):
     tree_list = LabeledTreeCorpus()
@@ -110,4 +111,14 @@ def import_tree_corpus(trees):
         for line in f:
             tree_list.append(create_tree_from_string(line))
     return tree_list
+
+
+def load_sst(path=None,
+             url='http://nlp.stanford.edu/sentiment/trainDevTestTrees_PTB.zip'):
+    if path is None:
+        # find a good temporary path
+        path = os.path.expanduser("~/stanford_sentiment_treebank/")
+        os.makedirs(path, exist_ok=True)
+    fnames = download_sst(path, url)
+    return {key: import_tree_corpus(value) for key, value in fnames.items()}
 

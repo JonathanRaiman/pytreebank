@@ -1,9 +1,7 @@
-from IPython.display import Javascript, HTML, display
-
 from os.path import realpath, dirname, join
+from IPython.display import HTML, display
 
 SCRIPT_DIR = dirname(realpath(__file__))
-
 
 def import_tag(tagname, contents = "", **kwargs):
 	html = "<%s " % (tagname)
@@ -24,27 +22,35 @@ def format_replacements(content, replacements):
 def import_javascript(scriptname, replacements=None):
 	if replacements is None:
 		replacements = {}
-	import_tag("script", contents = format_replacements(open(scriptname).read(), replacements), type = "text/javascript")
+	import_tag(
+		"script",
+		contents=format_replacements(open(scriptname).read(), replacements),
+		type="text/javascript"
+	)
 
 def import_css(cssname):
-	import_tag("style", contents = open(cssname).read())
+	import_tag("style", contents=open(cssname).read())
 
-def insert_stanford_javascript(treeWidth=1200, treeHeight=400, treeNodeRadius=10):
+def insert_stanford_javascript(tree_width=1200, tree_height=400, tree_node_radius=10):
 	import_javascript(join(SCRIPT_DIR, "c3.min.js"))
 	import_javascript(join(SCRIPT_DIR, "d3.min.js"))
 	import_javascript(join(SCRIPT_DIR, "sentree.min.js"))
 	import_javascript(join(SCRIPT_DIR, "sentrees.min.js"),
 		{
-			"treeWidth":treeWidth,
-			"treeHeight":treeHeight,
-			"treeNodeRadius":treeNodeRadius
+			"treeWidth":tree_width,
+			"treeHeight":tree_height,
+			"treeNodeRadius":tree_node_radius
 		})
 	import_javascript(join(SCRIPT_DIR, "tree_visualization.js"))
 
 def insert_stanford_styles():
 	import_css(join(SCRIPT_DIR, "tree_visualization.css"))
 
-def insert_sentiment_markup(treeWidth=1200, treeHeight=400, treeNodeRadius=10):
-	insert_stanford_javascript(treeWidth=treeWidth, treeHeight=treeHeight, treeNodeRadius=treeNodeRadius)
+def insert_sentiment_markup(tree_width=1200, tree_height=400, tree_node_radius=10):
+	insert_stanford_javascript(
+		tree_width=tree_width,
+		tree_height=tree_height,
+		tree_node_radius=tree_node_radius
+	)
 	insert_stanford_styles()
 	import_tag("div", className='trees')
