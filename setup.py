@@ -6,13 +6,13 @@ def readfile(fname):
 
 setup(
     name='pytreebank',
-    version='0.2.0',
+    version='0.2.1',
     description='Python package for loading Stanford Sentiment Treebank corpus',
     long_description=readfile('README.md'),
     ext_modules=[],
     packages=find_packages(),
     author='Jonathan Raiman',
-    author_email='jraiman at mit dot edu',
+    author_email='jonathanraiman@gmail.com',
     url='https://github.com/JonathanRaiman/pytreebank',
     download_url='https://github.com/JonathanRaiman/pytreebank',
     keywords='Machine Learning, NLP',
