@@ -5,21 +5,13 @@ from collections import OrderedDict
 
 from .labeled_trees import LabeledTree
 from .download import download_sst
+from .utils import makedirs, normalize_string
 
 class ParseError(ValueError):
     pass
 
-
 def attribute_text_label(node, current_word):
-    node.text = current_word\
-        .replace("\xa0", " ")\
-        .replace("\\", "")\
-        .replace("-LRB-", "(")\
-        .replace("-RRB-", ")")\
-        .replace("-LCB-", "{")\
-        .replace("-RCB-", "}")\
-        .replace("-LSB-", "[")\
-        .replace("-RSB-", "]")
+    node.text = normalize_string(current_word)
     node.text = node.text.strip(" ")
     node.udepth = 1
     if len(node.text) > 0 and node.text[0].isdigit():
@@ -118,7 +110,7 @@ def load_sst(path=None,
     if path is None:
         # find a good temporary path
         path = os.path.expanduser("~/stanford_sentiment_treebank/")
-        os.makedirs(path, exist_ok=True)
+        makedirs(path, exist_ok=True)
     fnames = download_sst(path, url)
     return {key: import_tree_corpus(value) for key, value in fnames.items()}
 
