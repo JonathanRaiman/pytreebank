@@ -6,7 +6,7 @@ def readfile(fname):
 
 setup(
     name='pytreebank',
-    version='0.2.1',
+    version='0.2.2',
     description='Python package for loading Stanford Sentiment Treebank corpus',
     long_description=readfile('README.md'),
     ext_modules=[],
@@ -23,6 +23,7 @@ setup(
         'Intended Audience :: Science/Research',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 2.7',
         'Topic :: Text Processing :: Linguistic',
     ],
     setup_requires = [],

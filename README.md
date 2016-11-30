@@ -1,12 +1,15 @@
 SST Utils
 ---------
 
-Utilities for downloading, importing, and visualizing the [Stanford Sentiment Treebank](http://nlp.stanford.edu/sentiment/treebank.html).
-See examples below for usage.
+Utilities for downloading, importing, and visualizing the [Stanford Sentiment Treebank](http://nlp.stanford.edu/sentiment/treebank.html), a dataset capturing fine-grained sentiment over movie reviews.
+See examples below for usage. Tested in Python `3.4.3` and `2.7.12`.
 
-@author Jonathan Raiman
+[![Jonathan Raiman, author](https://img.shields.io/badge/Author-Jonathan%20Raiman%20-blue.svg)]
 
 Javascript code by Jason Chuang and Stanford NLP modified and taken from [Stanford NLP Sentiment Analysis demo](http://nlp.stanford.edu:8080/sentiment/rntnDemo.html).
+
+[![PyPI version](https://badge.fury.io/py/pytreebank.svg)](https://badge.fury.io/py/pytreebank)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
 ### Visualization
 

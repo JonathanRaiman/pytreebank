@@ -7,6 +7,8 @@ import subprocess
 from os import remove, rmdir, stat
 from os.path import join, dirname, realpath, exists, isdir, isfile
 
+from .utils import print
+
 def execute_bash(command):
     """
     Executes bash command, prints output and throws an exception on failure.
@@ -71,7 +73,7 @@ def download_sst(path, url):
         return local_files
 
     zip_local = join(path, 'trainDevTestTrees_PTB.zip')
-    delete_paths([zip_local, join(path, "trees")] + local_files.values())
+    delete_paths([zip_local, join(path, "trees")] + list(local_files.values()))
     execute_bash('wget -O %s %s' % (zip_local, url))
     execute_bash('unzip %s -d %s' % (zip_local, path))
     execute_bash('mv %s %s' % (join(path, "trees", "*"), path))
