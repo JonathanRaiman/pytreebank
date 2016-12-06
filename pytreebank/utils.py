@@ -21,12 +21,13 @@ if sys.version_info >= (3,3):
     def print(*args, **kwargs):
         old_print(*args, **kwargs)
 else:
+    old_makedirs = os.makedirs
     def makedirs(path, mode=0o777, exist_ok=False):
         if not exist_ok:
-            return makedirs(path, mode)
+            return old_makedirs(path, mode)
         else:
             if not os.path.exists(path):
-                return makedirs(path, mode)
+                return old_makedirs(path, mode)
 
     def normalize_string(string):
         return string.replace(u"\xa0", " ")\
