@@ -20,6 +20,7 @@ if sys.version_info >= (3,3):
     old_print = print
     def print(*args, **kwargs):
         old_print(*args, **kwargs)
+    from urllib.request import urlretrieve
 else:
     old_makedirs = os.makedirs
     def makedirs(path, mode=0o777, exist_ok=False):
@@ -41,10 +42,11 @@ else:
 
     old_print = print
     def print(*args, **kwargs):
-        flush = kwargs.pop('flush', False)
+        flush = kwargs.pop("flush", False)
         old_print(*args, **kwargs)
-        file = kwargs.get('file', sys.stdout)
+        file = kwargs.get("file", sys.stdout)
         if flush and file is not None:
             file.flush()
+    from urllib import urlretrieve
 
-__all__ = ["makedirs", "normalize_string"]
+__all__ = ["makedirs", "normalize_string", "urlretrieve", "print"]

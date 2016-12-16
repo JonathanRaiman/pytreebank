@@ -8,6 +8,9 @@ from os import remove, rmdir, stat
 from os.path import join, dirname, realpath, exists, isdir, isfile
 
 from .utils import print
+from zipfile import ZipFile
+from shutil import move
+from . import utils
 
 def execute_bash(command):
     """
@@ -74,8 +77,9 @@ def download_sst(path, url):
 
     zip_local = join(path, 'trainDevTestTrees_PTB.zip')
     delete_paths([zip_local, join(path, "trees")] + list(local_files.values()))
-    execute_bash('wget -O %s %s' % (zip_local, url))
-    execute_bash('unzip %s -d %s' % (zip_local, path))
-    execute_bash('mv %s %s' % (join(path, "trees", "*"), path))
-    delete_paths([zip_local, join(path, "trees")])
+    utils.urlretrieve(url, zip_local)
+    ZipFile(zip_local).extractall(path)
+    for fname in local_files.values():
+        move(join(path, 'trainDevTestTrees_PTB', 'trees', fname.split('/')[-1]), fname)
+    delete_paths([zip_local, join(path, 'trainDevTestTrees_PTB', 'trees'), join(path, 'trainDevTestTrees_PTB')])
     return local_files

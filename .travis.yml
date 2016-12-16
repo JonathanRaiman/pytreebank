@@ -1,0 +1,21 @@
+language: python
+dist: trusty
+python:
+- '2.7'
+- '3.3'
+- '3.4'
+- '3.5'
+os:
+- linux
+install:
+    - python setup.py install
+    - pip install nose2
+script: nose2
+notifications:
+    email:
+        recipients:
+        - jonathanraiman@gmail.com
+        on_success: change
+        on_failure: always
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
