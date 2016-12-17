@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 import unittest
-import unittest.mock as mock
-import tempfile
+import sys
 
+if sys.version_info >= (3, 3):
+    import unittest.mock as mock
+else:
+    import mock
+
+import tempfile
 from shutil import copyfile
 
 from os.path import join, dirname, realpath
