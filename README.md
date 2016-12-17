@@ -9,6 +9,7 @@ See examples below for usage. Tested in Python `3.4.3` and `2.7.12`.
 Javascript code by Jason Chuang and Stanford NLP modified and taken from [Stanford NLP Sentiment Analysis demo](http://nlp.stanford.edu:8080/sentiment/rntnDemo.html).
 
 [![PyPI version](https://badge.fury.io/py/pytreebank.svg)](https://badge.fury.io/py/pytreebank)
+[![Build Status](https://travis-ci.org/JonathanRaiman/pytreebank.svg?branch=master)](https://travis-ci.org/JonathanRaiman/pytreebank)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
 ### Visualization
