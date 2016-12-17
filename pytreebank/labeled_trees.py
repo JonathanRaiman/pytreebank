@@ -14,13 +14,6 @@ except Exception:
         return max(4, int(len(text) * 1.1))
 
 
-class LabeledSentence(object):
-    __slots__ = ["text", "label"]
-    def __init__(self, text):
-        self.text = text
-        self.label    = None
-
-
 class LabeledTree(object):
     SCORE_MAPPING = [-12.5,-6.25,0.0,6.25,12.5]
 

@@ -1,35 +1,10 @@
-from __future__ import print_function
-
-import random
-import sys
-import subprocess
-
 from os import remove, rmdir, stat
 from os.path import join, dirname, realpath, exists, isdir, isfile
 
-from .utils import print
 from zipfile import ZipFile
 from shutil import move
 from . import utils
 
-def execute_bash(command):
-    """
-    Executes bash command, prints output and throws an exception on failure.
-
-    Arguments:
-    ----------
-        command : str, bash command to run.
-
-    """
-    process = subprocess.Popen(command,
-                               shell=True,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.STDOUT,
-                               universal_newlines=True)
-    for line in process.stdout:
-        print(line, end='', flush=True)
-    process.wait()
-    assert process.returncode == 0
 
 def delete_paths(paths):
     """
@@ -48,6 +23,7 @@ def delete_paths(paths):
                 remove(path)
             elif isdir(path):
                 rmdir(path)
+
 
 def download_sst(path, url):
     """"
