@@ -7,6 +7,20 @@ import sys
 if sys.version_info >= (3,3):
     makedirs = os.makedirs
     def normalize_string(string):
+        """
+        Standardize input strings by making
+        non-ascii spaces be ascii, and by converting
+        treebank-style brackets/parenthesis be characters
+        once more.
+
+        Arguments:
+        ----------
+            string : str, characters to be standardized.
+
+        Returns:
+        --------
+            str : standardized
+        """
         return string.replace("\xa0", " ")\
                      .replace("\\", "")\
                      .replace("-LRB-", "(")\
@@ -25,6 +39,20 @@ else:
                 return os.makedirs(path, mode)
 
     def normalize_string(string):
+        """
+        Standardize input strings by making
+        non-ascii spaces be ascii, and by converting
+        treebank-style brackets/parenthesis be characters
+        once more.
+
+        Arguments:
+        ----------
+            string : str, characters to be standardized.
+
+        Returns:
+        --------
+            str : standardized
+        """
         return string.replace(u"\xa0", " ")\
                      .replace("\\", "")\
                      .replace("-LRB-", "(")\

@@ -9,17 +9,18 @@ def import_tree_corpus(labels_path, parents_path, texts_path):
     """
     Import dataset from the TreeLSTM data generation scrips.
 
-    Inputs
-    ------
+    Arguments:
+    ----------
+        labels_path : str, where are labels are stored (should be in
+            data/sst/labels.txt).
+        parents_path : str, where the parent relationships are stored
+            (should be in data/sst/parents.txt).
+        texts_path : str, where are strings for each tree are stored
+            (should be in data/sst/sents.txt).
 
-    labels_path: where are labels are stored (should be in data/sst/labels.txt)
-    parents_path: where the parent relationships are stored (should be in data/sst/parents.txt)
-    texts_path: where are strings for each tree are stored (should be in data/sst/sents.txt)
-
-    Outputs
-    -------
-
-    trees : a list of LabeledTree
+    Returns:
+    --------
+        list<LabeledTree> : loaded example trees.
     """
     with codecs.open(labels_path, "r", "UTF-8") as f:
         label_lines = f.readlines()
