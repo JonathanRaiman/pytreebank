@@ -1,12 +1,14 @@
 import os
 from setuptools import setup, find_packages
 
+
 def readfile(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
 setup(
     name='pytreebank',
-    version='0.2.4',
+    version='0.2.5',
     description='Python package for loading Stanford Sentiment Treebank corpus',
     long_description=readfile('README.md'),
     ext_modules=[],
@@ -26,7 +28,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Topic :: Text Processing :: Linguistic',
     ],
-    setup_requires = [],
+    setup_requires=[],
     install_requires=[],
     include_package_data=True,
 )

@@ -1,8 +1,8 @@
-from os import remove, rmdir, stat
-from os.path import join, dirname, realpath, exists, isdir, isfile
+from os import stat, makedirs, remove
+from os.path import join, exists, isfile
 
 from zipfile import ZipFile
-from shutil import move
+from shutil import move, rmtree
 from . import utils
 
 
@@ -21,8 +21,8 @@ def delete_paths(paths):
         if exists(path):
             if isfile(path):
                 remove(path)
-            elif isdir(path):
-                rmdir(path)
+            else:
+                rmtree(path)
 
 
 def download_sst(path, url):
@@ -48,6 +48,7 @@ def download_sst(path, url):
         "test": join(path, "test.txt"),
         "dev": join(path, "dev.txt")
     }
+    makedirs(path, exist_ok=True)
     if all(exists(fname) and stat(fname).st_size > 100 for fname in local_files.values()):
         return local_files
 
@@ -56,6 +57,6 @@ def download_sst(path, url):
     utils.urlretrieve(url, zip_local)
     ZipFile(zip_local).extractall(path)
     for fname in local_files.values():
-        move(join(path, 'trainDevTestTrees_PTB', 'trees', fname.split('/')[-1]), fname)
+        move(join(path, 'trees', fname.split('/')[-1]), fname)
     delete_paths([zip_local, join(path, 'trainDevTestTrees_PTB', 'trees'), join(path, 'trainDevTestTrees_PTB')])
     return local_files
