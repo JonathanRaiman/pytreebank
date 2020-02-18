@@ -1,11 +1,13 @@
 import codecs
 import os
 
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from .labeled_trees import LabeledTree
 from .download import download_sst
 from .utils import makedirs, normalize_string
+
+SST_URL = 'http://nlp.stanford.edu/sentiment/trainDevTestTrees_PTB.zip'
 
 
 class ParseError(ValueError):
@@ -140,7 +142,6 @@ class LabeledTreeCorpus(list):
                     f.write(line + "\n")
 
 
-
 def import_tree_corpus(path):
     """
     Import a text file of treebank trees.
@@ -161,7 +162,7 @@ def import_tree_corpus(path):
 
 
 def load_sst(path=None,
-             url='http://nlp.stanford.edu/sentiment/trainDevTestTrees_PTB.zip'):
+             url=SST_URL):
     """
     Download and read in the Stanford Sentiment Treebank dataset
     into a dictionary with a 'train', 'dev', and 'test' keys. The
@@ -186,3 +187,30 @@ def load_sst(path=None,
     fnames = download_sst(path, url)
     return {key: import_tree_corpus(value) for key, value in fnames.items()}
 
+
+def load_sst_indices(top_words=10000, unknown_word_key="__UNK__", pad_key="__PAD__", **kwargs):
+    dataset = load_sst(**kwargs)
+    train_dataset = dataset["train"]
+    vocab = defaultdict(int)
+    vocab[unknown_word_key] = float('inf')
+    vocab[pad_key] = float('inf')
+    for ex in train_dataset:
+        for word in ex.to_lines()[0].split():
+            vocab[word] += 1
+    vocab = sorted(vocab, key=lambda x: vocab[x], reverse=True)[:top_words]
+    word2index = {word: idx for idx, word in enumerate(vocab)}
+    unk_idx = word2index[unknown_word_key]
+    out = {}
+    for key, dataset in dataset.items():
+        x = []
+        y = []
+        visited = set()
+        for ex in dataset:
+            for label, phrase in ex.to_labeled_lines():
+                if phrase in visited:
+                    continue
+                visited.add(phrase)
+                x.append([word2index.get(word, unk_idx) for word in phrase.split()])
+                y.append(label)
+        out[key] = (x, y)
+    return out, word2index

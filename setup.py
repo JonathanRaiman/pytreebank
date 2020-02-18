@@ -8,9 +8,10 @@ def readfile(fname):
 
 setup(
     name='pytreebank',
-    version='0.2.6',
+    version='0.2.7',
     description='Python package for loading Stanford Sentiment Treebank corpus',
     long_description=readfile('README.md'),
+    long_description_content_type="text/markdown",
     ext_modules=[],
     packages=find_packages(),
     author='Jonathan Raiman',

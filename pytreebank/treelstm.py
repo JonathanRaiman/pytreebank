@@ -5,6 +5,7 @@ by the TreeLSTM code from https://github.com/stanfordnlp/treelstm
 from .labeled_trees import LabeledTree
 import codecs
 
+
 def import_tree_corpus(labels_path, parents_path, texts_path):
     """
     Import dataset from the TreeLSTM data generation scrips.
@@ -34,12 +35,13 @@ def import_tree_corpus(labels_path, parents_path, texts_path):
     trees = []
 
     for labels, parents, words in zip(label_lines, parent_lines, word_lines):
-        labels  = [int(l) + 2 for l in labels.strip().split(" ")]
+        labels = [int(l) + 2 for l in labels.strip().split(" ")]
         parents = [int(l) for l in parents.strip().split(" ")]
-        words   = words.strip().split(" ")
+        words = words.strip().split(" ")
         assert len(labels) == len(parents)
         trees.append(read_tree(parents, labels, words))
     return trees
+
 
 def assign_texts(node, words, next_idx=0):
     """
@@ -55,6 +57,7 @@ def assign_texts(node, words, next_idx=0):
             next_idx = assign_texts(child, words, next_idx)
         return next_idx
 
+
 def read_tree(parents, labels, words):
     """
     Take as input a list of integers for parents
@@ -64,7 +67,7 @@ def read_tree(parents, labels, words):
     trees = {}
     root = None
     for i in range(1, len(parents) + 1):
-        if not i in trees and parents[i - 1] != - 1:
+        if i not in trees and parents[i - 1] != - 1:
             idx = i
             prev = None
             while True:
