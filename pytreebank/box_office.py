@@ -6,7 +6,7 @@ def get_box_office_links():
     import requests
     import lxml.html
     url = "https://www.rottentomatoes.com"
-    page = requests.get(url)
+    page = requests.get(url, timeout=30)
     doc = lxml.html.document_fromstring(page.content)
     n = doc.cssselect("#homepage-top-box-office .movie_list")
     links = set()
@@ -28,7 +28,7 @@ def more_reviews_available(document, pagenumber):
 def get_reviews_for_url(url, page_num=0):
     import requests
     import lxml.html
-    page = requests.get(url + "/reviews/?page=%d&type=user" % (page_num,))
+    page = requests.get(url + "/reviews/?page=%d&type=user" % (page_num,), timeout=30)
     doc = lxml.html.document_fromstring(page.content)
     reviews_nodes = doc.cssselect(".user_review")
     reviews = []
